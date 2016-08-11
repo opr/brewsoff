@@ -90,9 +90,9 @@ gulp.task('scripts', function () {
         .pipe(babel({
             presets: ['es2015']
         }))
-        .pipe(concat('all.js'))
+        .pipe(concat('bloc.js'))
         .pipe(gulp.dest('assets/js/dist'))
-        .pipe(rename('all.min.js'))
+        .pipe(rename('bloc.min.js'))
         .pipe(uglify())
         .pipe(gulp.dest('assets/js/dist'))
         .pipe(notify({message: "Javascript linted and compiled", title: "Compilation Successful"}))
@@ -122,8 +122,8 @@ gulp.task('webpack:build', function () {
 
 // Watch Files For Changes
 gulp.task('watch', function () {
-    gulp.watch(['assets/js/dist/all.js', 'components/*.php', './*.php']).on('change', browsersync.reload);
-    gulp.watch(['assets/js/*.js', 'assets/js/components/*.js', 'assets/js/react/*.js*'], ['lint', 'scripts']);
+    gulp.watch(['assets/js/dist/bloc.js', 'components/*.php', './*.php']).on('change', browsersync.reload);
+    gulp.watch(['assets/js/*.js', 'assets/js/components/*.js', 'assets/js/react/*.js*', 'assets/js/react/components/**.js*'], ['lint', 'scripts']);
     gulp.watch(['assets/js/react/**/*.js*'], ['webpack:build']);
     gulp.watch(['assets/js/dist/bundle.js'], ['bundle:minify']);
     gulp.watch('assets/styles/scss/**/*.scss', ['sass']);//.on( 'change', browsersync.stream );

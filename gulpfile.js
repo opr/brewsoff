@@ -124,7 +124,7 @@ gulp.task('webpack:build', function () {
 gulp.task('watch', function () {
     gulp.watch(['assets/js/dist/bloc.js', 'components/*.php', './*.php']).on('change', browsersync.reload);
     gulp.watch(['assets/js/*.js', 'assets/js/components/*.js', 'assets/js/react/*.js*', 'assets/js/react/components/**.js*'], ['lint', 'scripts']);
-    gulp.watch(['assets/js/react/**/*.js*'], ['webpack:build']);
+    gulp.watch(['assets/js/react/**/*.js*', 'assets/js/react/components/**/.js*'], ['webpack:build']);
     gulp.watch(['assets/js/dist/bundle.js'], ['bundle:minify']);
     gulp.watch('assets/styles/scss/**/*.scss', ['sass']);//.on( 'change', browsersync.stream );
 });

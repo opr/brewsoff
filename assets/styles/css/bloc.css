@@ -99,10 +99,10 @@ table {
 | Font Sizes                                      |
 *************************************************/
 /*************************************************|
-| Font Colours                                    |
+| Colours                                         |
 *************************************************/
 /*************************************************|
-| Colours                                         |
+| Font Colours                                    |
 *************************************************/
 /*************************************************|
 | Form Controls                                   |
@@ -135,7 +135,7 @@ table {
 html {
   font-family: "Muli", sans-serif;
   font-size: 14px;
-  color: #000; }
+  color: #49111C; }
   @media (min-width: 560px) {
     html {
       font-size: 14px; } }
@@ -152,6 +152,48 @@ html {
 *************************************************/
 body.\--nav-open {
   overflow: hidden; }
+
+.brew-button {
+  text-decoration: none;
+  display: block;
+  box-sizing: border-box;
+  background: #49111C;
+  color: #F2F4F3;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%);
+  cursor: pointer;
+  padding: 20px; }
+  @media (min-width: 560px) {
+    .brew-button {
+      padding: 30px; } }
+  .brew-button:after {
+    content: "";
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    height: 2px;
+    width: 0;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    -webkit-transform: translateX(-50%);
+    transform: translateX(-50%);
+    background: #F2F4F3; }
+  .brew-button:hover:after {
+    width: 80%; }
+  .brew-button__hint {
+    margin-top: 6px;
+    font-size: 0.8rem; }
+
+.button {
+  background: #49111C;
+  color: #F2F4F3;
+  padding: 15px 0;
+  border: 0;
+  cursor: pointer; }
 
 /*************************************************|
 | Container                                       |
@@ -174,38 +216,58 @@ body.\--nav-open {
   height: 100vh;
   background: url("/assets/img/coffee-cup-bed-bedroom.jpg") no-repeat center;
   background-size: cover;
-  position: relative; }
-  .hero__button {
-    text-decoration: none;
-    display: block;
-    box-sizing: border-box;
-    background: #49111C;
-    color: #F2F4F3;
-    padding: 30px;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    text-align: center;
-    -webkit-transform: translateX(-50%) translateY(-50%);
-    transform: translateX(-50%) translateY(-50%); }
-    .hero__button:after {
-      content: "";
-      -webkit-transition: all 0.3s ease;
-      transition: all 0.3s ease;
-      height: 2px;
-      width: 0;
-      position: absolute;
-      bottom: 8px;
-      left: 50%;
-      -webkit-transform: translateX(-50%);
-      transform: translateX(-50%);
-      background: #F2F4F3; }
-    .hero__button:hover:after {
-      width: 80%; }
-    .hero__button__hint {
-      margin-top: 6px;
-      font-size: 0.8rem; }
+  position: relative;
+  padding: 40px 0;
+  box-sizing: border-box; }
+
+.hidden-label {
+  position: absolute;
+  left: -5000px; }
 
 iframe {
   width: 100%;
   height: 500px; }
+
+.input {
+  background: #F2F4F3;
+  border: 0; }
+  .input.\--text {
+    font-size: 1.5rem;
+    font-weight: 300;
+    padding: 10px 20px;
+    color: #49111C; }
+
+.party__welcome {
+  font-size: 2rem;
+  font-weight: 700;
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translateX(-50%);
+  transform: translateX(-50%); }
+
+.username-form {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  -webkit-transform: translateX(-50%) translateY(-50%);
+  transform: translateX(-50%) translateY(-50%); }
+  .username-form__button {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    width: 100%; }
+  .username-form__input {
+    display: block;
+    color: #49111C; }
+  .username-form__label {
+    -webkit-transition: all 0.3s ease;
+    transition: all 0.3s ease;
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    cursor: text; }
+    .username-form__label.\--active {
+      top: -20px;
+      left: 0;
+      font-size: 0.9rem; }

@@ -1,0 +1,11 @@
+@include component(input) {
+  background: $palette__c;
+  border: 0;
+
+  @include option(text) {
+    font-size: 1.5rem;
+    font-weight: 300;
+    padding: 10px 20px;
+    color: $palette__b;
+  }
+}

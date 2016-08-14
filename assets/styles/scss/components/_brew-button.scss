@@ -1,0 +1,42 @@
+@include component(brew-button) {
+  text-decoration: none;
+  display: block;
+  box-sizing: border-box;
+  background: $palette__b;
+  color: $palette__c;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  text-align: center;
+  transform: translateX(-50%) translateY(-50%);
+  cursor: pointer;
+  padding: 20px;
+
+  @include bp($tablet) {
+    padding: 30px;
+  }
+
+  &:after {
+    content: "";
+    @include transition(all,ease);
+    height: 2px;
+    width: 0;
+    position: absolute;
+    bottom: 8px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: $palette__c;
+  }
+
+  &:hover {
+
+    &:after {
+      width: 80%;
+    }
+  }
+
+  @include part(hint) {
+    margin-top: 6px;
+    font-size: 0.8rem;
+  }
+}

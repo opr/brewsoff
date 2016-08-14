@@ -1,0 +1,33 @@
+@include component(username-form) {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translateX(-50%) translateY(-50%);
+
+  @include part(button) {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    width: 100%;
+  }
+
+  @include part(input) {
+    display: block;
+    color: $palette__b;
+  }
+
+  @include part(label) {
+    @include transition(all,ease);
+    display: block;
+    position: absolute;
+    top: 15px;
+    left: 20px;
+    cursor: text;
+
+    @include option(active) {
+      top: -20px;
+      left: 0;
+      font-size: 0.9rem;
+    }
+  }
+}

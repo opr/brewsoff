@@ -24,18 +24,6 @@ $basefontsize__tablet_portrait     : 14px;
 $basefontsize__tablet_landscape    : 14px;
 $basefontsize__desktop             : 14px;
 $lineheight                        : 19px;
-
-/*************************************************|
-| Font Colours                                    |
-*************************************************/
-
-$basefontcolor                     : #000;
-$offblack                          : #0f2b3d;
-$offblack__lighter                          : #1f455f;
-$basegrey                          : #504f4e;
-$headerfontcolor                   : #504f4e;
-$buttontextcolor                   : #fff;
-
 /*************************************************|
 | Colours                                         |
 *************************************************/
@@ -45,6 +33,19 @@ $palette__b                        : #49111C;
 $palette__c                        : #F2F4F3;
 $palette__d                        : #A9927D;
 $palette__e                        : #5E503F;
+
+
+/*************************************************|
+| Font Colours                                    |
+*************************************************/
+
+$basefontcolor                     : $palette__b;
+$offblack                          : #0f2b3d;
+$offblack__lighter                          : #1f455f;
+$basegrey                          : #504f4e;
+$headerfontcolor                   : #504f4e;
+$buttontextcolor                   : #fff;
+
 
 /*************************************************|
 | Form Controls                                   |

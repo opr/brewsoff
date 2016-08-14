@@ -1,0 +1,7 @@
+@include component(button) {
+  background: $palette__b;
+  color: $palette__c;
+  padding: 15px 0;
+  border: 0;
+  cursor: pointer;
+}

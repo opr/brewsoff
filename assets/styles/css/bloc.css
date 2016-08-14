@@ -237,6 +237,26 @@ iframe {
     padding: 10px 20px;
     color: #49111C; }
 
+.party-members {
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 40px;
+  width: 300px;
+  box-sizing: border-box;
+  background: #F2F4F3; }
+  .party-members__list {
+    padding: 20px 0; }
+    .party-members__list__item {
+      margin-bottom: 20px;
+      border: 1px solid #49111C;
+      padding: 10px; }
+      .party-members__list__item:last-child {
+        margin-bottom: 0; }
+  .party-members__title {
+    font-size: 1.5rem; }
+
 .party__welcome {
   font-size: 2rem;
   font-weight: 700;

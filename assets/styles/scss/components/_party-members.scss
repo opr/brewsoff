@@ -1,0 +1,29 @@
+@include component(party-members) {
+  height: 100vh;
+  position: absolute;
+  left: 0;
+  top: 0;
+  padding: 40px;
+  width: 300px;
+  box-sizing: border-box;
+  background: $palette__c;
+
+  @include part(list) {
+    padding: 20px 0;
+
+    @include part(item) {
+      margin-bottom: 20px;
+      border: 1px solid $palette__b;
+      padding: 10px;
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+
+    }
+  }
+
+  @include part(title) {
+    font-size: 1.5rem;
+  }
+}

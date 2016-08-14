@@ -6,6 +6,8 @@ const INITIAL_STATE = Map();
 export default function reducer(state = INITIAL_STATE, action) {
 
     switch (action.type) {
+        case 'SET_STATE' :
+            return state.merge(action);
         case 'SET_PARTY' :
             return setPartyName(state, action.payload);
         case 'ADD_MEMBER' :

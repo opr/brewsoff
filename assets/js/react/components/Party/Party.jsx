@@ -27,10 +27,21 @@ let Party = React.createClass({
         };
     },
     componentDidMount: function () {
-
+        if (!("Notification" in window)) {
+            alert("This browser does not support desktop notification");
+            return;
+        }
+        if (Notification.permission !== 'denied') {
+            Notification.requestPermission(function (permission) {
+                // Whatever the user answers, we make sure we store the information
+                if(!('permission' in Notification)) {
+                    Notification.permission = permission;
+                }
+            });
+        }
     },
-    initiateBrew: function () {
-        const action = {type: 'START_BREW', payload: this.state.party};
+    startBrewRound: function () {
+        const action = {type: 'START_BREW', payload: Map({ party: this.state.party, socketId: socket.id})};
         socket.emit('action', action);
     },
     usernameSubmitted: function (name) {
@@ -39,13 +50,34 @@ let Party = React.createClass({
                 store.dispatch(setState(state));
             }
         );
+
+        socket.on('brewStarting', msg => {
+            console.log('starting brews');
+            if (Notification.permission !== 'denied') {
+                Notification.requestPermission(function (permission) {
+
+                    // Whatever the user answers, we make sure we store the information
+                    if(!('permission' in Notification)) {
+                        Notification.permission = permission;
+                    }
+
+                    // If the user is okay, let's create a notification
+                    if (permission === "granted") {
+                        let notification = new Notification(msg + ' is starting a brew round!');
+                    }
+                });
+            }
+
+        });
+
         socket.on('connect', function () {
             const addPartyAction = {type: 'ADD_PARTY', payload: this.state.party};
             socket.emit('action', addPartyAction);
+            socket.emit('joinRoom', this.state.party);
 
             const addMemberAction = {
                 type: 'ADD_MEMBER',
-                payload: {party: this.state.party, member: {socketId: socket.id, name: name}}
+                payload: {party: this.state.party, member: Map({socketId: socket.id, name: name})}
             };
             socket.emit('action', addMemberAction);
         }.bind(this));
@@ -53,8 +85,8 @@ let Party = React.createClass({
     },
     render: function () {
         let displayedElement = this.state.name == null ? <UsernameForm submitHandler={this.usernameSubmitted}/> : [
-            <PartyMemberListContainer key="1" partyName={this.props.params.party} />,
-            <BrewButton key="2"/>];
+            <PartyMemberListContainer key="1" partyName={this.props.params.party}/>,
+            <BrewButton startBrewRound={this.startBrewRound} key="2"/>];
         return (
             <Provider store={store}>
                 <div className="party">

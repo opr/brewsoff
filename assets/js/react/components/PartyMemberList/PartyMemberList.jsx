@@ -1,15 +1,15 @@
 import React from 'react';
 import {connect} from 'react-redux';
-import {toJS} from 'immutable';
+import {toJS, fromJS} from 'immutable';
 
 let PartyMemberList = React.createClass({
     render: function() {
+        let members = fromJS(this.props.members);
         let memberNames = [];
-        if( typeof this.props.party != 'undefined') {
-            console.log(this.props.party);
+        if( typeof members != 'undefined') {
             let counter = 0;
-            for (let x of this.props.party.get('members')) {
-                let name = x.get('name');
+            for (let x of members) {
+                let name = x[1].get('name');
                 memberNames.push(<ul className="party-members__list__item" key={name + counter++}>{name}</ul>);
             }
         }
@@ -33,7 +33,7 @@ function mapStateToProps(state) {
         return {};
     }
     return {
-        party: state.get('state').getIn( ['parties', this.props.partyName])
+        members: state.get('state').get( 'members' )
     };
 }
 

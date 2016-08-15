@@ -26356,9 +26356,22 @@
 	            party: this.props.params.party
 	        };
 	    },
-	    componentDidMount: function componentDidMount() {},
-	    initiateBrew: function initiateBrew() {
-	        var action = { type: 'START_BREW', payload: this.state.party };
+	    componentDidMount: function componentDidMount() {
+	        if (!("Notification" in window)) {
+	            alert("This browser does not support desktop notification");
+	            return;
+	        }
+	        if (Notification.permission !== 'denied') {
+	            Notification.requestPermission(function (permission) {
+	                // Whatever the user answers, we make sure we store the information
+	                if (!('permission' in Notification)) {
+	                    Notification.permission = permission;
+	                }
+	            });
+	        }
+	    },
+	    startBrewRound: function startBrewRound() {
+	        var action = { type: 'START_BREW', payload: (0, _immutable.Map)({ party: this.state.party, socketId: socket.id }) };
 	        socket.emit('action', action);
 	    },
 	    usernameSubmitted: function usernameSubmitted(name) {
@@ -26366,20 +26379,40 @@
 	        socket.on('state', function (state) {
 	            store.dispatch((0, _actionCreators.setState)(state));
 	        });
+
+	        socket.on('brewStarting', function (msg) {
+	            console.log('starting brews');
+	            if (Notification.permission !== 'denied') {
+	                Notification.requestPermission(function (permission) {
+
+	                    // Whatever the user answers, we make sure we store the information
+	                    if (!('permission' in Notification)) {
+	                        Notification.permission = permission;
+	                    }
+
+	                    // If the user is okay, let's create a notification
+	                    if (permission === "granted") {
+	                        var notification = new Notification(msg + ' is starting a brew round!');
+	                    }
+	                });
+	            }
+	        });
+
 	        socket.on('connect', function () {
 	            var addPartyAction = { type: 'ADD_PARTY', payload: this.state.party };
 	            socket.emit('action', addPartyAction);
+	            socket.emit('joinRoom', this.state.party);
 
 	            var addMemberAction = {
 	                type: 'ADD_MEMBER',
-	                payload: { party: this.state.party, member: { socketId: socket.id, name: name } }
+	                payload: { party: this.state.party, member: (0, _immutable.Map)({ socketId: socket.id, name: name }) }
 	            };
 	            socket.emit('action', addMemberAction);
 	        }.bind(this));
 	        this.setState({ name: name });
 	    },
 	    render: function render() {
-	        var displayedElement = this.state.name == null ? _react2.default.createElement(_UsernameForm2.default, { submitHandler: this.usernameSubmitted }) : [_react2.default.createElement(_PartyMemberList2.default, { key: '1', partyName: this.props.params.party }), _react2.default.createElement(_BrewButton2.default, { key: '2' })];
+	        var displayedElement = this.state.name == null ? _react2.default.createElement(_UsernameForm2.default, { submitHandler: this.usernameSubmitted }) : [_react2.default.createElement(_PartyMemberList2.default, { key: '1', partyName: this.props.params.party }), _react2.default.createElement(_BrewButton2.default, { startBrewRound: this.startBrewRound, key: '2' })];
 	        return _react2.default.createElement(
 	            _reactRedux.Provider,
 	            { store: store },
@@ -33873,19 +33906,19 @@
 	    displayName: 'PartyMemberList',
 
 	    render: function render() {
+	        var members = (0, _immutable.fromJS)(this.props.members);
 	        var memberNames = [];
-	        if (typeof this.props.party != 'undefined') {
-	            console.log(this.props.party);
+	        if (typeof members != 'undefined') {
 	            var counter = 0;
 	            var _iteratorNormalCompletion = true;
 	            var _didIteratorError = false;
 	            var _iteratorError = undefined;
 
 	            try {
-	                for (var _iterator = this.props.party.get('members')[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+	                for (var _iterator = members[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                    var x = _step.value;
 
-	                    var name = x.get('name');
+	                    var name = x[1].get('name');
 	                    memberNames.push(_react2.default.createElement(
 	                        'ul',
 	                        { className: 'party-members__list__item', key: name + counter++ },
@@ -33932,7 +33965,7 @@
 	        return {};
 	    }
 	    return {
-	        party: state.get('state').getIn(['parties', this.props.partyName])
+	        members: state.get('state').get('members')
 	    };
 	}
 
@@ -40393,7 +40426,7 @@
 	    render: function render() {
 	        return _react2.default.createElement(
 	            "div",
-	            { href: "#", className: "brew-button" },
+	            { href: "#", className: "brew-button", onClick: this.props.startBrewRound },
 	            "Making a brew or what lad?",
 	            _react2.default.createElement(
 	                "div",

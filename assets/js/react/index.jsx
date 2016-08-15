@@ -30,5 +30,4 @@ let App = React.createClass({
 });
 export default App
 
-
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'));

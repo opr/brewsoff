@@ -1,4 +1,5 @@
 @include component(brew-button) {
+  @include transition(background, ease);
   text-decoration: none;
   display: block;
   box-sizing: border-box;
@@ -33,6 +34,10 @@
     &:after {
       width: 80%;
     }
+  }
+
+  @include option(stop-brew) {
+    background: $palette__d;
   }
 
   @include part(hint) {

@@ -23,12 +23,13 @@ let Party = React.createClass({
     getInitialState: function () {
         return {
             name: null,
-            party: this.props.params.party
+            party: this.props.params.party,
+            isUserBrewer: false
         };
     },
     componentDidMount: function () {
-        if (!("Notification" in window)) {
-            alert("This browser does not support desktop notification");
+        if (!('Notification' in window)) {
+            alert('This browser does not support desktop notification');
             return;
         }
         if (Notification.permission !== 'denied') {
@@ -44,6 +45,11 @@ let Party = React.createClass({
         const action = {type: 'START_BREW', payload: Map({ party: this.state.party, socketId: socket.id})};
         socket.emit('action', action);
     },
+    stopBrewRound: function () {
+        const action = {type: 'STOP_BREW', payload: Map({ party: this.state.party, socketId: socket.id})};
+        this.setState({isUserBrewer: false});
+        socket.emit('action', action);
+    },
     usernameSubmitted: function (name) {
         socket = io(`${location.protocol}//${location.hostname}:8090`);
         socket.on('state', state => {
@@ -52,7 +58,11 @@ let Party = React.createClass({
         );
 
         socket.on('brewStarting', msg => {
-            console.log('starting brews');
+            if( msg.brewer == socket.id ){
+                this.setState({isUserBrewer: true});
+                return;
+            }
+            
             if (Notification.permission !== 'denied') {
                 Notification.requestPermission(function (permission) {
 
@@ -62,8 +72,8 @@ let Party = React.createClass({
                     }
 
                     // If the user is okay, let's create a notification
-                    if (permission === "granted") {
-                        let notification = new Notification(msg + ' is starting a brew round!');
+                    if (permission === 'granted') {
+                        let notification = new Notification(msg.name + ' is starting a brew round!');
                     }
                 });
             }
@@ -85,8 +95,8 @@ let Party = React.createClass({
     },
     render: function () {
         let displayedElement = this.state.name == null ? <UsernameForm submitHandler={this.usernameSubmitted}/> : [
-            <PartyMemberListContainer key="1" partyName={this.props.params.party}/>,
-            <BrewButton startBrewRound={this.startBrewRound} key="2"/>];
+            <PartyMemberListContainer key="1" partyName={this.props.params.party} />,
+            <BrewButton startBrewRound={this.startBrewRound} stopBrewRound={this.stopBrewRound} isUserBrewer={this.state.isUserBrewer} key="2"/>];
         return (
             <Provider store={store}>
                 <div className="party">

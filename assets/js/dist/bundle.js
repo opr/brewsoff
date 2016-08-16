@@ -26353,12 +26353,13 @@
 	    getInitialState: function getInitialState() {
 	        return {
 	            name: null,
-	            party: this.props.params.party
+	            party: this.props.params.party,
+	            isUserBrewer: false
 	        };
 	    },
 	    componentDidMount: function componentDidMount() {
-	        if (!("Notification" in window)) {
-	            alert("This browser does not support desktop notification");
+	        if (!('Notification' in window)) {
+	            alert('This browser does not support desktop notification');
 	            return;
 	        }
 	        if (Notification.permission !== 'denied') {
@@ -26374,14 +26375,25 @@
 	        var action = { type: 'START_BREW', payload: (0, _immutable.Map)({ party: this.state.party, socketId: socket.id }) };
 	        socket.emit('action', action);
 	    },
+	    stopBrewRound: function stopBrewRound() {
+	        var action = { type: 'STOP_BREW', payload: (0, _immutable.Map)({ party: this.state.party, socketId: socket.id }) };
+	        this.setState({ isUserBrewer: false });
+	        socket.emit('action', action);
+	    },
 	    usernameSubmitted: function usernameSubmitted(name) {
+	        var _this = this;
+
 	        socket = (0, _socket2.default)(location.protocol + '//' + location.hostname + ':8090');
 	        socket.on('state', function (state) {
 	            store.dispatch((0, _actionCreators.setState)(state));
 	        });
 
 	        socket.on('brewStarting', function (msg) {
-	            console.log('starting brews');
+	            if (msg.brewer == socket.id) {
+	                _this.setState({ isUserBrewer: true });
+	                return;
+	            }
+
 	            if (Notification.permission !== 'denied') {
 	                Notification.requestPermission(function (permission) {
 
@@ -26391,8 +26403,8 @@
 	                    }
 
 	                    // If the user is okay, let's create a notification
-	                    if (permission === "granted") {
-	                        var notification = new Notification(msg + ' is starting a brew round!');
+	                    if (permission === 'granted') {
+	                        var notification = new Notification(msg.name + ' is starting a brew round!');
 	                    }
 	                });
 	            }
@@ -26412,7 +26424,7 @@
 	        this.setState({ name: name });
 	    },
 	    render: function render() {
-	        var displayedElement = this.state.name == null ? _react2.default.createElement(_UsernameForm2.default, { submitHandler: this.usernameSubmitted }) : [_react2.default.createElement(_PartyMemberList2.default, { key: '1', partyName: this.props.params.party }), _react2.default.createElement(_BrewButton2.default, { startBrewRound: this.startBrewRound, key: '2' })];
+	        var displayedElement = this.state.name == null ? _react2.default.createElement(_UsernameForm2.default, { submitHandler: this.usernameSubmitted }) : [_react2.default.createElement(_PartyMemberList2.default, { key: '1', partyName: this.props.params.party }), _react2.default.createElement(_BrewButton2.default, { startBrewRound: this.startBrewRound, stopBrewRound: this.stopBrewRound, isUserBrewer: this.state.isUserBrewer, key: '2' })];
 	        return _react2.default.createElement(
 	            _reactRedux.Provider,
 	            { store: store },
@@ -33918,11 +33930,21 @@
 	                for (var _iterator = members[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
 	                    var x = _step.value;
 
+	                    var membersSocketId = x[0],
+	                        brewIcon = null;
+	                    if (this.props.brewer == membersSocketId) {
+	                        brewIcon = _react2.default.createElement('div', { className: 'party-members__brew-icon' });
+	                    }
 	                    var name = x[1].get('name');
 	                    memberNames.push(_react2.default.createElement(
-	                        'ul',
+	                        'li',
 	                        { className: 'party-members__list__item', key: name + counter++ },
-	                        name
+	                        _react2.default.createElement(
+	                            'div',
+	                            { className: 'party-members__member-name' },
+	                            name
+	                        ),
+	                        brewIcon
 	                    ));
 	                }
 	            } catch (err) {
@@ -33965,7 +33987,8 @@
 	        return {};
 	    }
 	    return {
-	        members: state.get('state').get('members')
+	        members: state.get('state').get('members'),
+	        brewer: typeof state.get('state').get('brewer') != 'undefined' ? state.get('state').get('brewer') : null
 	    };
 	}
 
@@ -40408,7 +40431,7 @@
 /* 307 */
 /***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
 
 	Object.defineProperty(exports, "__esModule", {
 	    value: true
@@ -40421,17 +40444,40 @@
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var BrewButton = _react2.default.createClass({
-	    displayName: "BrewButton",
+	    displayName: 'BrewButton',
 
+	    getInitialState: function getInitialState() {
+	        var defaultClassNames = {
+	            brewButton: 'brew-button'
+	        };
+
+	        return {
+	            isUserBrewer: this.props.isUserBrewer,
+	            startBrewText: 'Making a brew or what lad?',
+	            startBrewHint: 'Click this button if you\'re getting the kettle on',
+	            stopBrewText: 'Finished brewing mate?',
+	            stopBrewHint: 'Click this button if you\'ve made the drinks',
+	            defaultClassNames: defaultClassNames,
+	            classNames: defaultClassNames
+	        };
+	    },
+	    componentWillReceiveProps: function componentWillReceiveProps(nextProps) {
+	        var newClassNames = Object.assign({}, this.state.defaultClassNames);
+	        if (nextProps.isUserBrewer) {
+	            newClassNames.brewButton = 'brew-button --stop-brew';
+	        }
+	        this.setState({ isUserBrewer: nextProps.isUserBrewer, classNames: newClassNames });
+	    },
 	    render: function render() {
 	        return _react2.default.createElement(
-	            "div",
-	            { href: "#", className: "brew-button", onClick: this.props.startBrewRound },
-	            "Making a brew or what lad?",
+	            'div',
+	            { href: '#', className: this.state.classNames.brewButton,
+	                onClick: this.state.isUserBrewer ? this.props.stopBrewRound : this.props.startBrewRound },
+	            this.state.isUserBrewer ? this.state.stopBrewText : this.state.startBrewText,
 	            _react2.default.createElement(
-	                "div",
-	                { className: "brew-button__hint" },
-	                "Click this button if you're getting the kettle on"
+	                'div',
+	                { className: 'brew-button__hint' },
+	                this.state.isUserBrewer ? this.state.stopBrewHint : this.state.startBrewHint
 	            )
 	        );
 	    }

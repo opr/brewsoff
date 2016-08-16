@@ -9,8 +9,18 @@ let PartyMemberList = React.createClass({
         if( typeof members != 'undefined') {
             let counter = 0;
             for (let x of members) {
+                let membersSocketId = x[0],
+                    brewIcon = null;
+                if( this.props.brewer == membersSocketId ) {
+                    brewIcon = <div className="party-members__brew-icon"></div>
+                }
                 let name = x[1].get('name');
-                memberNames.push(<ul className="party-members__list__item" key={name + counter++}>{name}</ul>);
+                memberNames.push(
+                    <li className="party-members__list__item" key={name + counter++}>
+                        <div className="party-members__member-name">{name}</div>
+                        {brewIcon}
+                    </li>
+                );
             }
         }
         return (
@@ -33,7 +43,8 @@ function mapStateToProps(state) {
         return {};
     }
     return {
-        members: state.get('state').get( 'members' )
+        members: state.get('state').get( 'members' ),
+        brewer: typeof state.get('state').get('brewer') != 'undefined' ? state.get('state').get('brewer') : null
     };
 }
 

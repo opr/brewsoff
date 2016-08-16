@@ -14,8 +14,8 @@
 | of them, this causes the container to have the  |
 | proper height.
 *************************************************/
-@import url(https://fonts.googleapis.com/css?family=Muli:400,300,200);
-.cf:after, .container:after {
+@import url(https://fonts.googleapis.com/css?family=Neuton:400,300,200);
+.cf:after, .container:after, .party-members__list__item:after {
   visibility: hidden;
   display: block;
   font-size: 0;
@@ -133,18 +133,18 @@ table {
   src: local("☺"), url(../../fonts/CenturyGothicBold.ttf); }
 
 html {
-  font-family: "Muli", sans-serif;
-  font-size: 14px;
+  font-family: "Neuton", sans-serif;
+  font-size: 16px;
   color: #49111C; }
   @media (min-width: 560px) {
     html {
-      font-size: 14px; } }
+      font-size: 16px; } }
   @media (min-width: 960px) {
     html {
-      font-size: 14px; } }
+      font-size: 16px; } }
   @media (min-width: 1260px) {
     html {
-      font-size: 14px; } }
+      font-size: 16px; } }
 
 /*************************************************|
 | Now we can actually get on with making the site |
@@ -154,6 +154,8 @@ body.\--nav-open {
   overflow: hidden; }
 
 .brew-button {
+  -webkit-transition: background 0.3s ease;
+  transition: background 0.3s ease;
   text-decoration: none;
   display: block;
   box-sizing: border-box;
@@ -184,6 +186,8 @@ body.\--nav-open {
     background: #F2F4F3; }
   .brew-button:hover:after {
     width: 80%; }
+  .brew-button.\--stop-brew {
+    background: #A9927D; }
   .brew-button__hint {
     margin-top: 6px;
     font-size: 0.8rem; }
@@ -246,14 +250,33 @@ iframe {
   width: 300px;
   box-sizing: border-box;
   background: #F2F4F3; }
+  .party-members__brew-icon {
+    height: 20px;
+    width: 20px;
+    background: url("/assets/img/brew.png") no-repeat center;
+    background-size: cover;
+    display: inline-block;
+    position: absolute;
+    top: 50%;
+    right: 15px;
+    -webkit-transform: translateY(-60%);
+    transform: translateY(-60%); }
   .party-members__list {
     padding: 20px 0; }
     .party-members__list__item {
       margin-bottom: 20px;
       border: 1px solid #49111C;
-      padding: 10px; }
+      padding: 20px;
+      position: relative; }
       .party-members__list__item:last-child {
         margin-bottom: 0; }
+  .party-members__member-name {
+    position: absolute;
+    left: 15px;
+    top: 50%;
+    -webkit-transform: translateY(-50%);
+    transform: translateY(-50%);
+    display: inline-block; }
   .party-members__title {
     font-size: 1.5rem; }
 
